@@ -70,15 +70,19 @@ authRouter.get("/google/callback", (req, res, next) => {
       return res.sendStatus(404);
     }
     // Login successful
-    jwt.sign({ user }, process.env.SECRET, (err, token) => {
-      if (err) {
-        res.sendStatus(500);
-      }
-      res.json({
-        status: 200,
-        token,
-      });
-    });
+    jwt.sign(
+      { user },
+      process.env.SECRET,
+      { expiresIn: "1d" },
+      (err, token) => {
+        if (err) {
+          return res.redirect(
+            `${process.env.FRONTEND_URL}/login?error=server_error`,
+          );
+        }
+        res.redirect(`${process.env.FRONTEND_URL}/auth-success?token=${token}`);
+      },
+    );
   })(req, res, next);
 });
 
