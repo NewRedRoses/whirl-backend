@@ -1,10 +1,13 @@
 const express = require("express");
 const passport = require("passport");
 const session = require("express-session");
+const cors = require("cors");
 
 const app = express();
 
 const PORT = process.env.PORT || 3000;
+
+app.use(cors());
 
 app.use(
   session({
