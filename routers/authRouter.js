@@ -1,5 +1,6 @@
 const { Router } = require("express");
 const authRouter = Router();
+const jwt = require("jsonwebtoken");
 
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
@@ -59,13 +60,6 @@ authRouter.get(
   "/google",
   passport.authenticate("google", { scope: ["profile"] }),
 );
-// authRouter.get(
-//   "/google/callback",
-//   passport.authenticate("google", {
-//     failureRedirect: "/login",
-//     successRedirect: "/",
-//   }),
-// );
 
 authRouter.get("/google/callback", (req, res, next) => {
   passport.authenticate("google", (err, user, info, status) => {
@@ -75,7 +69,16 @@ authRouter.get("/google/callback", (req, res, next) => {
     if (!user) {
       return res.sendStatus(404);
     }
-    res.sendStatus(200);
+    // Login successful
+    jwt.sign({ user }, process.env.SECRET, (err, token) => {
+      if (err) {
+        res.sendStatus(500);
+      }
+      res.json({
+        status: 200,
+        token,
+      });
+    });
   })(req, res, next);
 });
 
