@@ -80,7 +80,15 @@ authRouter.get("/google/callback", (req, res, next) => {
             `${process.env.FRONTEND_URL}/login?error=server_error`,
           );
         }
-        res.redirect(`${process.env.FRONTEND_URL}/auth-success?token=${token}`);
+        // res.redirect(`${process.env.FRONTEND_URL}/auth-success?token=${token}`);
+        res.cookie("jwt", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV == "dev" ? false : true,
+          sameSite: "lax",
+          maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
+        });
+        // redirect
+        res.redirect(`${process.env.FRONTEND_URL}/`);
       },
     );
   })(req, res, next);

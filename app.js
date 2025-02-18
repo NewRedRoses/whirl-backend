@@ -12,6 +12,12 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
+app.use(
+  cors({
+    origin: process.env.FRONTEND_URL,
+    credentials: true,
+  }),
+);
 
 app.use(
   session({
@@ -22,6 +28,7 @@ app.use(
 );
 app.use(passport.session());
 app.use(express.urlencoded({ extended: false }));
+app.use(cookieParser());
 
 // Routers
 const authRouter = require("./routers/authRouter.js");
