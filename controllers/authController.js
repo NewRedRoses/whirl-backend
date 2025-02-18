@@ -26,12 +26,14 @@ passport.use(
       });
       if (!user) {
         await prisma.user.create({
+        const newUser = await prisma.user.create({
           data: {
             googleId: profile.id,
             name: profile.displayName,
           },
         });
         done(null, user);
+        done(null, newUser);
       } else {
         return done(null, user);
       }
