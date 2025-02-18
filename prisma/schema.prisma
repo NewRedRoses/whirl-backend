@@ -20,6 +20,15 @@ model User {
   username   String?  @db.VarChar(20)
   password   String? // could be deleted
   googleId   String?  @unique
-  // profile Profile?
+  profile    Profile?
   // post Post[]
+}
+
+model Profile {
+  id           Int    @id @default(autoincrement())
+  displayName  String? @db.VarChar(20)
+  userId       Int    @unique
+  user         User   @relation(fields: [userId], references: [id])
+  pfpUrl String?
+  friendsCount Int @default(0)
 }
