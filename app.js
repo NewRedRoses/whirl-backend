@@ -2,6 +2,10 @@ const express = require("express");
 const passport = require("passport");
 const session = require("express-session");
 const cors = require("cors");
+const cookieParser = require("cookie-parser");
+const { PrismaClient } = require("@prisma/client");
+const prisma = new PrismaClient();
+const jwt = require("jsonwebtoken");
 
 const app = express();
 
