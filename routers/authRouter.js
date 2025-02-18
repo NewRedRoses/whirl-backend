@@ -20,6 +20,11 @@ passport.use(
         where: {
           googleId: profile.id,
         },
+        select: {
+          id: true,
+          name: true,
+          dateJoined: true,
+        },
       });
       if (!user) {
         await prisma.user.create({
@@ -45,7 +50,7 @@ passport.deserializeUser(async (id, done) => {
     // Get user ID from db that matches arg id set it ‘user’
     const user = await prisma.user.findUnique({
       where: {
-        id: id,
+        id,
       },
     });
     done(null, user);
@@ -87,6 +92,7 @@ authRouter.get("/google/callback", (req, res, next) => {
           sameSite: "lax",
           maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
         });
+
         // redirect
         res.redirect(`${process.env.FRONTEND_URL}/`);
       },
