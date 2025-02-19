@@ -21,7 +21,7 @@ model User {
   password   String? // could be deleted
   googleId   String?  @unique
   profile    Profile?
-  // post Post[]
+  post       Post[]
 }
 
 model Profile {
@@ -31,4 +31,15 @@ model Profile {
   user         User    @relation(fields: [userId], references: [id])
   pfpUrl       String?
   friendsCount Int     @default(0)
+}
+
+model Post {
+  id         Int      @id @default(autoincrement())
+  userId     Int
+  content    String @default("")
+  user       User     @relation(fields: [userId], references: [id])
+  datePosted DateTime @default(now())
+  likesNum   Int      @default(0) // I'm trying to avoid complexity...
+  // postComment PostComment[]
+  // postLike    PostLike[]
 }
