@@ -25,10 +25,10 @@ model User {
 }
 
 model Profile {
-  id           Int    @id @default(autoincrement())
+  id           Int     @id @default(autoincrement())
   displayName  String? @db.VarChar(20)
-  userId       Int    @unique
-  user         User   @relation(fields: [userId], references: [id])
-  pfpUrl String?
-  friendsCount Int @default(0)
+  userId       Int     @unique
+  user         User    @relation(fields: [userId], references: [id])
+  pfpUrl       String?
+  friendsCount Int     @default(0)
 }
