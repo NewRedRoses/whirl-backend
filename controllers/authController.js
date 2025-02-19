@@ -31,10 +31,12 @@ passport.use(
             name: profile.displayName,
           },
         });
+        // Create matching profile for the user
         await prisma.profile.create({
           data: {
             userId: newUser.id,
             displayName: profile.displayName,
+            pfpUrl: profile.photos[0].value,
           },
         });
         done(null, newUser);
