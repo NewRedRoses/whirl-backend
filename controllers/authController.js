@@ -14,6 +14,9 @@ passport.use(
       callbackURL: process.env["GOOGLE_REDIRECT_URL"],
     },
     async (accessToken, refreshToken, profile, done) => {
+      let googlePfpUrl = profile.photos[0].value;
+      googlePfpUrl = googlePfpUrl.slice(0, -2);
+
       const user = await prisma.user.findFirst({
         where: {
           googleId: profile.id,
@@ -36,7 +39,7 @@ passport.use(
           data: {
             userId: newUser.id,
             displayName: profile.displayName,
-            pfpUrl: profile.photos[0].value,
+            pfpUrl: googlePfpUrl,
           },
         });
         done(null, newUser);
