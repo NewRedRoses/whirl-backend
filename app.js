@@ -29,9 +29,11 @@ app.use(cookieParser());
 // Routers
 const authRouter = require("./routers/authRouter.js");
 const userRouter = require("./routers/userRouter.js");
+const postRouter = require("./routers/postRouter.js");
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
+app.use("/api/posts?", postRouter);
 
 app.listen(PORT, () => {
   console.log(`App listening on: ${PORT}`);
