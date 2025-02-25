@@ -26,7 +26,7 @@ const getUserPfp = (req, res) => {
       }
       const userPfp = await prisma.profile.findFirst({
         where: {
-          id: authData.id,
+          userId: authData.id,
         },
         select: {
           pfpUrl: true,

@@ -11,9 +11,18 @@ const getUserProfileByUserId = async (userId) => {
         displayName: true,
         pfpUrl: true,
         friendsCount: true,
+        bio: true,
+        user: {
+          select: {
+            username: true,
+            dateJoined: true,
+          },
+        },
       },
     });
-    return profile;
+
+    const flattenedProfile = { ...profile, ...profile.user };
+    return flattenedProfile;
   } catch (err) {
     console.log(err);
   }
@@ -40,7 +49,6 @@ const getPostsDesc = async () => {
   return posts;
 };
 
-module.exports = { getUserProfileByUserId, getPostsDesc };
 const getAllUsersPosts = async (id) => {
   try {
     const posts = await prisma.post.findMany({
@@ -65,4 +73,5 @@ const getAllUsersPosts = async (id) => {
     console.log(err);
   }
 };
+
 module.exports = { getUserProfileByUserId, getPostsDesc, getAllUsersPosts };
