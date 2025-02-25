@@ -3,7 +3,10 @@ const passport = require("passport");
 
 const authRouter = Router();
 
-const { googleCallback } = require("../controllers/authController.js");
+const {
+  googleCallback,
+  checkSession,
+} = require("../controllers/authController.js");
 
 authRouter.get(
   "/google",
@@ -11,5 +14,6 @@ authRouter.get(
 );
 
 authRouter.get("/google/callback", googleCallback);
+authRouter.get("/check-session", checkSession);
 
 module.exports = authRouter;

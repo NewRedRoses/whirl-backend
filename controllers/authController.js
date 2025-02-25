@@ -92,6 +92,7 @@ const googleCallback = (req, res, next) => {
           secure: process.env.NODE_ENV == "dev" ? false : true,
           sameSite: "lax",
           maxAge: 24 * 60 * 60 * 1000, // 1 day in milliseconds
+          // maxAge: 1000 * 6 * 60,
         });
 
         // redirect
@@ -101,4 +102,19 @@ const googleCallback = (req, res, next) => {
   })(req, res, next);
 };
 
-module.exports = { googleCallback };
+const checkSession = (req, res) => {
+  const token = req.cookies.jwt;
+
+  if (!token) {
+    return res.status(401).json({ message: "Not authenticated" });
+  }
+
+  try {
+    const decoded = jwt.verify(token, process.env.SECRET);
+    return res.status(200).json({ message: "Authenticated" });
+  } catch (error) {
+    return res.status(401).json({ message: "Token expired or invalid" });
+  }
+};
+
+module.exports = { googleCallback, checkSession };
