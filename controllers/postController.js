@@ -1,6 +1,10 @@
 const jwt = require("jsonwebtoken");
 
-const { getPostsDesc, getAllUsersPosts } = require("../prisma/db.js");
+const {
+  getPostsDesc,
+  getAllUsersPosts,
+  createPost,
+} = require("../prisma/db.js");
 
 const getHomePagePosts = (req, res) => {
   jwt.verify(req.cookies.jwt, process.env.SECRET, async (errors, authData) => {
@@ -30,4 +34,22 @@ const getUserPosts = (req, res) => {
   });
 };
 
-module.exports = { getHomePagePosts, getUserPosts };
+const handleSubmitPost = (req, res) => {
+  jwt.verify(req.cookies.jwt, process.env.SECRET, async (errors, authData) => {
+    if (errors) {
+      return res.sendStatus(401);
+    }
+    try {
+      if (req.body.post != "" && req.body.post != undefined) {
+        await createPost(authData.user.id, req.body.post);
+        res.sendStatus(200);
+      } else {
+        res.status(400).send("Post's content cannot be empty.");
+      }
+    } catch (err) {
+      res.status(400).send("Unable to submit post. Please try again later.");
+    }
+  });
+};
+
+module.exports = { getHomePagePosts, getUserPosts, handleSubmitPost };

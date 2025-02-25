@@ -74,4 +74,22 @@ const getAllUsersPosts = async (id) => {
   }
 };
 
-module.exports = { getUserProfileByUserId, getPostsDesc, getAllUsersPosts };
+const createPost = async (userId, content) => {
+  try {
+    await prisma.post.create({
+      data: {
+        userId: userId,
+        content: content,
+      },
+    });
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+module.exports = {
+  getUserProfileByUserId,
+  getPostsDesc,
+  getAllUsersPosts,
+  createPost,
+};
