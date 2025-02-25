@@ -41,3 +41,28 @@ const getPostsDesc = async () => {
 };
 
 module.exports = { getUserProfileByUserId, getPostsDesc };
+const getAllUsersPosts = async (id) => {
+  try {
+    const posts = await prisma.post.findMany({
+      where: {
+        userId: id,
+      },
+      select: {
+        id: true,
+        userId: true,
+        content: true,
+        datePosted: true,
+        likesNum: true,
+        user: {
+          select: {
+            profile: true,
+          },
+        },
+      },
+    });
+    return posts;
+  } catch (err) {
+    console.log(err);
+  }
+};
+module.exports = { getUserProfileByUserId, getPostsDesc, getAllUsersPosts };

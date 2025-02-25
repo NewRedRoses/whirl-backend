@@ -31,12 +31,13 @@ model Profile {
   user         User    @relation(fields: [userId], references: [id])
   pfpUrl       String?
   friendsCount Int     @default(0)
+  bio          String? @db.VarChar(200)
 }
 
 model Post {
   id         Int      @id @default(autoincrement())
   userId     Int
-  content    String @default("")
+  content    String   @default("")
   user       User     @relation(fields: [userId], references: [id])
   datePosted DateTime @default(now())
   likesNum   Int      @default(0) // I'm trying to avoid complexity...
