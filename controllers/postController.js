@@ -40,8 +40,8 @@ const handleSubmitPost = (req, res) => {
       return res.sendStatus(401);
     }
     try {
-      if (req.body.post != "" && req.body.post != undefined) {
-        await createPost(authData.user.id, req.body.post);
+      if (req.body.content != "" && req.body.content != undefined) {
+        await createPost(authData.user.id, req.body.content);
         res.sendStatus(200);
       } else {
         res.status(400).send("Post's content cannot be empty.");
