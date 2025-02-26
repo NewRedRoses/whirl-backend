@@ -39,4 +39,29 @@ const getUserPfp = (req, res) => {
   });
 };
 
-module.exports = { getUserProfile, getUserPfp };
+const getAllUserProfiles = (req, res) => {
+  jwt.verify(req.cookies.jwt, process.env.SECRET, async (errors, authData) => {
+    try {
+      if (errors) {
+        return res.sendStatus(401);
+      }
+      const allUsers = await prisma.profile.findMany({
+        select: {
+          pfpUrl: true,
+          friendsCount: true,
+          displayName: true,
+          user: {
+            select: {
+              username: true,
+            },
+          },
+        },
+      });
+      res.json(allUsers);
+    } catch (err) {
+      console.log(err);
+    }
+  });
+};
+
+module.exports = { getUserProfile, getUserPfp, getAllUserProfiles };
