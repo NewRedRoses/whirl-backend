@@ -21,6 +21,7 @@ const getHomePagePosts = (req, res) => {
 };
 
 const getUserPosts = (req, res) => {
+const getProfilePosts = (req, res) => {
   jwt.verify(req.cookies.jwt, process.env.SECRET, async (errors, authData) => {
     if (errors) {
       return res.sendStatus(401);
@@ -53,3 +54,4 @@ const handleSubmitPost = (req, res) => {
 };
 
 module.exports = { getHomePagePosts, getUserPosts, handleSubmitPost };
+  getProfilePosts,
