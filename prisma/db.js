@@ -87,9 +87,27 @@ const createPost = async (userId, content) => {
   }
 };
 
+const getPostDetailsById = async (postId) => {
+  try {
+    const post = await prisma.post.findUnique({
+      where: {
+        id: parseInt(postId),
+      },
+    });
+    if (post) {
+      return post;
+    } else {
+      return undefined;
+    }
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   getUserProfileByUserId,
   getPostsDesc,
   getAllUsersPosts,
   createPost,
+  getPostDetailsById,
 };

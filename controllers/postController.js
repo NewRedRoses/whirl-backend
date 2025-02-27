@@ -4,6 +4,7 @@ const {
   getPostsDesc,
   getAllUsersPosts,
   createPost,
+  getPostDetailsById,
 } = require("../prisma/db.js");
 
 const getHomePagePosts = (req, res) => {
@@ -20,7 +21,6 @@ const getHomePagePosts = (req, res) => {
   });
 };
 
-const getUserPosts = (req, res) => {
 const getProfilePosts = (req, res) => {
   jwt.verify(req.cookies.jwt, process.env.SECRET, async (errors, authData) => {
     if (errors) {
@@ -53,5 +53,23 @@ const handleSubmitPost = (req, res) => {
   });
 };
 
-module.exports = { getHomePagePosts, getUserPosts, handleSubmitPost };
+const getPostById = (req, res) => {
+  jwt.verify(req.cookies.jwt, process.env.SECRET, async (errors, authData) => {
+    const postId = req.params.post_id;
+
+    const postDetails = await getPostDetailsById(postId);
+
+    if (postDetails) {
+      res.json(postDetails);
+    } else {
+      res.json({ error: "Post not found!" });
+    }
+  });
+};
+
+module.exports = {
+  getHomePagePosts,
   getProfilePosts,
+  handleSubmitPost,
+  getPostById,
+};

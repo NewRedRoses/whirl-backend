@@ -4,15 +4,15 @@ const postRouter = Router();
 
 const {
   getHomePagePosts,
-  getUserPosts,
   handleSubmitPost,
   getProfilePosts,
+  getPostById,
 } = require("../controllers/postController.js");
 
 postRouter.get("", getHomePagePosts);
 postRouter.post("", handleSubmitPost);
 
-postRouter.get("/:user", getUserPosts);
+postRouter.get("/id/:post_id", getPostById);
 postRouter.get("/profile", getProfilePosts);
 
 module.exports = postRouter;
