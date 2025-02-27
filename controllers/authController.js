@@ -17,7 +17,7 @@ passport.use(
       let googlePfpUrl = profile.photos[0].value;
       googlePfpUrl = googlePfpUrl.slice(0, -2);
 
-      const user = await prisma.user.findFirst({
+      const user = await prisma.user.findUnique({
         where: {
           googleId: profile.id,
         },

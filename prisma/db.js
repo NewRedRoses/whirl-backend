@@ -3,7 +3,7 @@ const prisma = new PrismaClient();
 
 const getUserProfileByUserId = async (userId) => {
   try {
-    const profile = await prisma.profile.findFirst({
+    const profile = await prisma.profile.findUnique({
       where: {
         userId: userId,
       },

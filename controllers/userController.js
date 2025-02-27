@@ -24,7 +24,7 @@ const getUserPfp = (req, res) => {
       if (errors) {
         return res.sendStatus(401);
       }
-      const userPfp = await prisma.profile.findFirst({
+      const userPfp = await prisma.profile.findUnique({
         where: {
           userId: authData.user.id,
         },
