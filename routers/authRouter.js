@@ -6,6 +6,7 @@ const authRouter = Router();
 const {
   googleCallback,
   checkSession,
+  googLogOut,
 } = require("../controllers/authController.js");
 
 authRouter.get(
@@ -14,6 +15,7 @@ authRouter.get(
 );
 
 authRouter.get("/google/callback", googleCallback);
+authRouter.post("/google/logout", googLogOut);
 authRouter.get("/check-session", checkSession);
 
 module.exports = authRouter;

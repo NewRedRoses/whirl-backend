@@ -102,6 +102,22 @@ const googleCallback = (req, res, next) => {
   })(req, res, next);
 };
 
+const googLogOut = (req, res, next) => {
+  req.logout(function (err) {
+    if (err) {
+      return next(err);
+    }
+    // log out user
+    res.cookie("jwt", "none", {
+      expires: new Date(Date.now() + 5 * 1000),
+      httpOnly: true,
+    });
+    res
+      .status(200)
+      .json({ success: true, message: "User logged out successfully." });
+  });
+};
+
 const checkSession = (req, res) => {
   const token = req.cookies.jwt;
 
@@ -117,4 +133,4 @@ const checkSession = (req, res) => {
   }
 };
 
-module.exports = { googleCallback, checkSession };
+module.exports = { googleCallback, googLogOut, checkSession };
