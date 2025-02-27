@@ -1,4 +1,5 @@
 const jwt = require("jsonwebtoken");
+const { generateUsername } = require("unique-username-generator");
 
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
@@ -32,6 +33,7 @@ passport.use(
           data: {
             googleId: profile.id,
             name: profile.displayName,
+            username: generateUsername(),
           },
         });
         // Create matching profile for the user

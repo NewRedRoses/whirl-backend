@@ -17,7 +17,8 @@
     "express": "^4.21.2",
     "express-session": "^1.18.1",
     "jsonwebtoken": "^9.0.2",
-    "passport-google-oauth20": "^2.0.0"
+    "passport-google-oauth20": "^2.0.0",
+    "unique-username-generator": "^1.4.0"
   },
   "devDependencies": {
     "prisma": "^6.3.1"
