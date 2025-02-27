@@ -26,7 +26,7 @@ const getUserPosts = (req, res) => {
       return res.sendStatus(401);
     }
     try {
-      const posts = await getAllUsersPosts(authData.id);
+      const posts = await getAllUsersPosts(authData.user.id);
       res.json(posts);
     } catch (err) {
       res.status(400).send("Unable to fetch posts. Please try again later.");
