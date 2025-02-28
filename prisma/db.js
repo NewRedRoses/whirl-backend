@@ -104,10 +104,66 @@ const getPostDetailsById = async (postId) => {
   }
 };
 
+const getPostLikeId = async (postId, userId) => {
+  try {
+    const post = await prisma.postLike.findFirst({
+      where: {
+        AND: [
+          {
+            postId: {
+              equals: postId,
+            },
+          },
+          {
+            userId: {
+              equals: userId,
+            },
+          },
+        ],
+      },
+    });
+    return post;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const addLikeToPost = async (postId, userId) => {
+  try {
+    const post = await prisma.postLike.create({
+      data: {
+        userId: userId,
+        postId: postId,
+      },
+    });
+    return post;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const removeLikeFromPost = async (postId, userId) => {
+  try {
+    const rowToDelete = await getPostLikeId(postId, userId);
+
+    const postLikeRemoved = await prisma.postLike.delete({
+      where: {
+        id: rowToDelete.id,
+      },
+    });
+    return postLikeRemoved;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   getUserProfileByUserId,
   getPostsDesc,
   getAllUsersPosts,
   createPost,
   getPostDetailsById,
+  getPostLikeId,
+  addLikeToPost,
+  removeLikeFromPost,
 };

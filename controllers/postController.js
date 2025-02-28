@@ -5,6 +5,9 @@ const {
   getAllUsersPosts,
   createPost,
   getPostDetailsById,
+  getPostLikeId,
+  addLikeToPost,
+  removeLikeFromPost,
 } = require("../prisma/db.js");
 
 const getHomePagePosts = (req, res) => {
@@ -70,9 +73,43 @@ const getPostById = (req, res) => {
   });
 };
 
+const handlePostLike = (req, res) => {
+  jwt.verify(req.cookies.jwt, process.env.SECRET, async (errors, authData) => {
+    if (errors) {
+      return res.sendStatus(401);
+    }
+    const postId = parseInt(req.params.post_id);
+    const userId = authData.user.id;
+
+    const isPostLiked = await getPostLikeId(postId, userId);
+
+    if (isPostLiked) {
+      const postLikeRemoved = await removeLikeFromPost(postId, userId);
+
+      postLikeRemoved
+        ? res.status(200).send("Post like removed successfully.")
+        : res.status(400).send("Unable to remove like from post.");
+    } else {
+      const postLiked = await addLikeToPost(postId, userId);
+
+      postLiked
+        ? res.status(200).send("Post liked successfully.")
+        : res.status(400).send("Unable to like post.");
+    }
+
+    res.end();
+
+    try {
+    } catch (err) {
+      res.status(400).send("Unable to like post. Please try again later.");
+    }
+  });
+};
+
 module.exports = {
   getHomePagePosts,
   getProfilePosts,
   handleSubmitPost,
   getPostById,
+  handlePostLike,
 };
