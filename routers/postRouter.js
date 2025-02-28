@@ -14,7 +14,7 @@ postRouter.get("", getHomePagePosts);
 postRouter.post("", handleSubmitPost);
 
 postRouter.get("/id/:post_id", getPostById);
-postRouter.get("/id/:post_id/like", handlePostLike);
+postRouter.post("/id/:post_id/like", handlePostLike);
 postRouter.get("/profile", getProfilePosts);
 
 module.exports = postRouter;
