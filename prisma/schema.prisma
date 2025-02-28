@@ -14,14 +14,15 @@ datasource db {
 }
 
 model User {
-  id         Int      @id @default(autoincrement())
-  name       String   @db.VarChar(50)
-  dateJoined DateTime @default(now())
-  username   String?  @db.VarChar(20)
+  id         Int        @id @default(autoincrement())
+  name       String     @db.VarChar(50)
+  dateJoined DateTime   @default(now())
+  username   String?    @db.VarChar(20)
   password   String? // could be deleted
-  googleId   String?  @unique
+  googleId   String?    @unique
   profile    Profile?
   post       Post[]
+  postsLiked PostLike[]
 }
 
 model Profile {
@@ -35,12 +36,21 @@ model Profile {
 }
 
 model Post {
-  id         Int      @id @default(autoincrement())
+  id         Int        @id @default(autoincrement())
   userId     Int
-  content    String   @default("")
-  user       User     @relation(fields: [userId], references: [id])
-  datePosted DateTime @default(now())
-  likesNum   Int      @default(0) // I'm trying to avoid complexity...
+  content    String     @default("")
+  user       User       @relation(fields: [userId], references: [id])
+  datePosted DateTime   @default(now())
+  likesNum   Int        @default(0) // I'm trying to avoid complexity...
   // postComment PostComment[]
-  // postLike    PostLike[]
+  postLike   PostLike[]
+}
+
+model PostLike {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(fields: [userId], references: [id])
+  postId    Int
+  post      Post     @relation(fields: [postId], references: [id])
+  dateLiked DateTime @default(now())
 }
