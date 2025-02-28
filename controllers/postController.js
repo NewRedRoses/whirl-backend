@@ -55,6 +55,9 @@ const handleSubmitPost = (req, res) => {
 
 const getPostById = (req, res) => {
   jwt.verify(req.cookies.jwt, process.env.SECRET, async (errors, authData) => {
+    if (errors) {
+      return res.sendStatus(401);
+    }
     const postId = req.params.post_id;
 
     const postDetails = await getPostDetailsById(postId);
