@@ -8,13 +8,17 @@ const {
   getProfilePosts,
   getPostById,
   handlePostLike,
+  hasUserLikedPost,
 } = require("../controllers/postController.js");
 
 postRouter.get("", getHomePagePosts);
 postRouter.post("", handleSubmitPost);
 
 postRouter.get("/id/:post_id", getPostById);
+
+postRouter.get("/id/:post_id/like", hasUserLikedPost);
 postRouter.post("/id/:post_id/like", handlePostLike);
+
 postRouter.get("/profile", getProfilePosts);
 
 module.exports = postRouter;

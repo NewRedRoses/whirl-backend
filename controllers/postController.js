@@ -106,10 +106,35 @@ const handlePostLike = (req, res) => {
   });
 };
 
+const hasUserLikedPost = (req, res) => {
+  jwt.verify(req.cookies.jwt, process.env.SECRET, async (errors, authData) => {
+    if (errors) {
+      return res.sendStatus(401);
+    }
+    try {
+      const postId = parseInt(req.params.post_id);
+      const userId = authData.user.id;
+
+      const isPostLiked = await getPostLikeId(postId, userId);
+
+      if (isPostLiked) {
+        res.json({ success: "Post is liked by user" });
+      } else {
+        res.json({ error: "Post is not liked by user" });
+      }
+    } catch (err) {
+      res
+        .status(500)
+        .send("Unable to get post like status. Please try again later.");
+    }
+  });
+};
+
 module.exports = {
   getHomePagePosts,
   getProfilePosts,
   handleSubmitPost,
   getPostById,
   handlePostLike,
+  hasUserLikedPost,
 };

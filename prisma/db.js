@@ -136,6 +136,17 @@ const addLikeToPost = async (postId, userId) => {
         postId: postId,
       },
     });
+    // Increment counter for post
+    await prisma.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        likesNum: {
+          increment: 1,
+        },
+      },
+    });
     return post;
   } catch (error) {
     console.log(error);
@@ -149,6 +160,17 @@ const removeLikeFromPost = async (postId, userId) => {
     const postLikeRemoved = await prisma.postLike.delete({
       where: {
         id: rowToDelete.id,
+      },
+    });
+    // decrement counter from post counter
+    await prisma.post.update({
+      where: {
+        id: postId,
+      },
+      data: {
+        likesNum: {
+          decrement: 1,
+        },
       },
     });
     return postLikeRemoved;
