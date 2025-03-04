@@ -225,6 +225,20 @@ const getCommentsFromPostId = async (postId) => {
   }
 };
 
+const addCommentToPost = async (postId, userId, content) => {
+  try {
+    return await prisma.postComment.create({
+      data: {
+        postId,
+        userId,
+        content,
+      },
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   getUserProfileByUserId,
   getPostsDesc,
@@ -235,4 +249,5 @@ module.exports = {
   addLikeToPost,
   removeLikeFromPost,
   getCommentsFromPostId,
+  addCommentToPost,
 };

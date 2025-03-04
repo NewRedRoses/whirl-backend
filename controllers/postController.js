@@ -9,6 +9,7 @@ const {
   addLikeToPost,
   removeLikeFromPost,
   getCommentsFromPostId,
+  addCommentToPost,
 } = require("../prisma/db.js");
 
 const getHomePagePosts = (req, res) => {
@@ -146,6 +147,30 @@ const getPostComments = (req, res) => {
     }
   });
 };
+
+const handlePostComment = (req, res) => {
+  jwt.verify(req.cookies.jwt, process.env.SECRET, async (errors, authData) => {
+    if (errors) {
+      return res.sendStatus(401);
+    }
+    try {
+      const postId = parseInt(req.params.post_id);
+      const userId = authData.user.id;
+      const content = req.body.content;
+
+      const response = await addCommentToPost(postId, userId, content);
+
+      if (response) {
+        res.status(200).json({ success: "comment added successfully" });
+      } else {
+        res.status(500).json({ error: "Unable to add comment." });
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  });
+};
+
 module.exports = {
   getHomePagePosts,
   getProfilePosts,
@@ -154,4 +179,5 @@ module.exports = {
   handlePostLike,
   hasUserLikedPost,
   getPostComments,
+  handlePostComment,
 };

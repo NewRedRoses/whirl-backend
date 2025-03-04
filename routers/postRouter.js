@@ -10,6 +10,7 @@ const {
   handlePostLike,
   hasUserLikedPost,
   getPostComments,
+  handlePostComment,
 } = require("../controllers/postController.js");
 
 postRouter.get("", getHomePagePosts);
@@ -21,7 +22,7 @@ postRouter.get("/id/:post_id/like", hasUserLikedPost);
 postRouter.post("/id/:post_id/like", handlePostLike);
 
 postRouter.get("/id/:post_id/comments?", getPostComments);
-// postRouter.post("/id/:post_id/comments?", handlePostComment );
+postRouter.post("/id/:post_id/comments?", handlePostComment);
 
 postRouter.get("/profile", getProfilePosts);
 
