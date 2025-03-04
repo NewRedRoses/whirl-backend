@@ -93,6 +93,24 @@ const getPostDetailsById = async (postId) => {
       where: {
         id: parseInt(postId),
       },
+      select: {
+        id: true,
+        likesNum: true,
+        content: true,
+        datePosted: true,
+        likesNum: true,
+        user: {
+          select: {
+            username: true,
+            profile: {
+              select: {
+                displayName: true,
+                pfpUrl: true,
+              },
+            },
+          },
+        },
+      },
     });
     if (post) {
       return post;
@@ -179,6 +197,19 @@ const removeLikeFromPost = async (postId, userId) => {
   }
 };
 
+const getCommentsFromPostId = async (postId) => {
+  try {
+    const comments = await prisma.postComment.findMany({
+      where: {
+        postId: postId,
+      },
+    });
+    return comments;
+  } catch (err) {
+    return err;
+  }
+};
+
 module.exports = {
   getUserProfileByUserId,
   getPostsDesc,
@@ -188,4 +219,5 @@ module.exports = {
   getPostLikeId,
   addLikeToPost,
   removeLikeFromPost,
+  getCommentsFromPostId,
 };
