@@ -203,6 +203,21 @@ const getCommentsFromPostId = async (postId) => {
       where: {
         postId: postId,
       },
+      select: {
+        content: true,
+        id: true,
+        datePosted: true,
+        user: {
+          select: {
+            profile: {
+              select: {
+                displayName: true,
+                pfpUrl: true,
+              },
+            },
+          },
+        },
+      },
     });
     return comments;
   } catch (err) {
