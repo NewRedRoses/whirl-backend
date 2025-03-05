@@ -116,7 +116,6 @@ const hasUserLikedPost = (req, res) => {
     try {
       const postId = parseInt(req.params.post_id);
       const userId = authData.user.id;
-      console.log("test: ", postId, userId);
 
       const isPostLiked = await getPostLikeId(postId, userId);
 
