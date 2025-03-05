@@ -39,6 +39,11 @@ const getPostsDesc = async () => {
       content: true,
       datePosted: true,
       likesNum: true,
+      _count: {
+        select: {
+          postComment: true,
+        },
+      },
       user: {
         select: {
           profile: true,
@@ -61,6 +66,11 @@ const getAllUsersPosts = async (id) => {
         content: true,
         datePosted: true,
         likesNum: true,
+        _count: {
+          select: {
+            postComment: true,
+          },
+        },
         user: {
           select: {
             profile: true,
@@ -99,6 +109,11 @@ const getPostDetailsById = async (postId) => {
         content: true,
         datePosted: true,
         likesNum: true,
+        _count: {
+          select: {
+            postComment: true,
+          },
+        },
         user: {
           select: {
             username: true,
