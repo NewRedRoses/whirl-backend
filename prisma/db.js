@@ -112,6 +112,7 @@ const getPostDetailsById = async (postId) => {
         _count: {
           select: {
             postComment: true,
+            postLike: true,
           },
         },
         user: {
