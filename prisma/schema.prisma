@@ -24,6 +24,8 @@ model User {
   post        Post[]
   postsLiked  PostLike[]
   PostComment PostComment[]
+  friends     User[]        @relation("UserFriends")
+  friendOf    User[]        @relation("UserFriends")
 }
 
 model Profile {

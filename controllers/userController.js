@@ -53,6 +53,11 @@ const getAllUserProfiles = (req, res) => {
           user: {
             select: {
               username: true,
+              _count: {
+                select: {
+                  friendOf: true,
+                },
+              },
             },
           },
         },

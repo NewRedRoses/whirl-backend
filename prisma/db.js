@@ -16,6 +16,12 @@ const getUserProfileByUserId = async (userId) => {
           select: {
             username: true,
             dateJoined: true,
+            _count: {
+              select: {
+                friendOf: true,
+                friends: true,
+              },
+            },
           },
         },
       },
