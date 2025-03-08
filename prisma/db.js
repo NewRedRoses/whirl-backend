@@ -261,6 +261,37 @@ const addCommentToPost = async (postId, userId, content) => {
   }
 };
 
+const addFriendsById = async (userIdA, userIdB) => {
+  try {
+    const response = await prisma.userFriend.create({
+      data: {
+        userIdA,
+        userIdB,
+      },
+    });
+    return response;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+const getUserDetailsByUsername = async (username) => {
+  try {
+    const user = await prisma.user.findFirst({
+      where: {
+        username,
+      },
+    });
+    if (user) {
+      return user;
+    } else {
+      return "user not found";
+    }
+  } catch (err) {
+    console.log(err);
+  }
+};
+
 module.exports = {
   getUserProfileByUserId,
   getPostsDesc,
@@ -272,4 +303,6 @@ module.exports = {
   removeLikeFromPost,
   getCommentsFromPostId,
   addCommentToPost,
+  addFriendsById,
+  getUserDetailsByUsername,
 };
