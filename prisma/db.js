@@ -53,6 +53,7 @@ const getPostsDesc = async () => {
       user: {
         select: {
           profile: true,
+          username: true,
         },
       },
     },
@@ -80,6 +81,7 @@ const getAllUsersPosts = async (id) => {
         user: {
           select: {
             profile: true,
+            username: true,
           },
         },
       },

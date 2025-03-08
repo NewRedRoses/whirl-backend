@@ -26,6 +26,7 @@ passport.use(
           id: true,
           name: true,
           dateJoined: true,
+          username: true,
         },
       });
       if (!user) {
@@ -61,6 +62,13 @@ passport.deserializeUser(async (id, done) => {
     const user = await prisma.user.findUnique({
       where: {
         id,
+      },
+      select: {
+        profile: {
+          select: {
+            username: true,
+          },
+        },
       },
     });
     done(null, user);

@@ -9,7 +9,7 @@ const {
 } = require("../controllers/userController.js");
 
 userRouter.get("/", getAllUserProfiles);
-userRouter.get("/profile", getUserProfile);
+userRouter.get("/profile/:username", getUserProfile); // new
 userRouter.get("/pfp", getUserPfp);
 
 module.exports = userRouter;

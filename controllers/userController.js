@@ -2,7 +2,10 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const jwt = require("jsonwebtoken");
 
-const { getUserProfileByUserId } = require("../prisma/db.js");
+const {
+  getUserProfileByUserId,
+  getUserDetailsByUsername,
+} = require("../prisma/db.js");
 
 const getUserProfile = (req, res) => {
   jwt.verify(req.cookies.jwt, process.env.SECRET, async (errors, authData) => {
@@ -10,7 +13,9 @@ const getUserProfile = (req, res) => {
       if (errors) {
         return res.sendStatus(401);
       }
-      const profileData = await getUserProfileByUserId(authData.user.id);
+      const username = req.params.username;
+      const user = await getUserDetailsByUsername(username);
+      const profileData = await getUserProfileByUserId(user.id);
       res.json(profileData);
     } catch (err) {
       console.log(err);
@@ -30,6 +35,11 @@ const getUserPfp = (req, res) => {
         },
         select: {
           pfpUrl: true,
+          user: {
+            select: {
+              username: true,
+            },
+          },
         },
       });
       res.json(userPfp);
@@ -56,6 +66,8 @@ const getAllUserProfiles = (req, res) => {
               _count: {
                 select: {
                   friendOf: true,
+                  friendsA: true,
+                  friendsB: true,
                 },
               },
             },
@@ -69,4 +81,8 @@ const getAllUserProfiles = (req, res) => {
   });
 };
 
-module.exports = { getUserProfile, getUserPfp, getAllUserProfiles };
+module.exports = {
+  getUserProfile,
+  getUserPfp,
+  getAllUserProfiles,
+};

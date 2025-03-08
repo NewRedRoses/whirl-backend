@@ -5,7 +5,7 @@ const postRouter = Router();
 const {
   getHomePagePosts,
   handleSubmitPost,
-  getProfilePosts,
+  getUserPosts,
   getPostById,
   handlePostLike,
   hasUserLikedPost,
@@ -24,6 +24,6 @@ postRouter.post("/id/:post_id/like", handlePostLike);
 postRouter.get("/id/:post_id/comments?", getPostComments);
 postRouter.post("/id/:post_id/comments?", handlePostComment);
 
-postRouter.get("/profile", getProfilePosts);
+postRouter.get("/user/:username", getUserPosts);
 
 module.exports = postRouter;
