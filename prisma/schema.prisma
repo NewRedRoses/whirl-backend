@@ -24,8 +24,10 @@ model User {
   post        Post[]
   postsLiked  PostLike[]
   PostComment PostComment[]
-  friends     User[]        @relation("UserFriends")
-  friendOf    User[]        @relation("UserFriends")
+  friends     User[]        @relation("UserFriends") // TB deprecated
+  friendOf    User[]        @relation("UserFriends") //TB deprecated
+  friendsA    UserFriend[]  @relation("FriendshipA")
+  friendsB    UserFriend[]  @relation("FriendshipB")
 }
 
 model Profile {
@@ -66,4 +68,16 @@ model PostComment {
   postId     Int
   post       Post     @relation(fields: [postId], references: [id])
   datePosted DateTime @default(now())
+}
+
+model UserFriend {
+  id            Int      @id @default(autoincrement())
+  userIdA       Int
+  userA         User     @relation("FriendshipA", fields: [userIdA], references: [id])
+  userIdB       Int
+  userB         User     @relation("FriendshipB", fields: [userIdB], references: [id])
+  requestStatus String   @default("pending")
+  date          DateTime @default(now())
+
+  @@unique([userIdA, userIdB])
 }
