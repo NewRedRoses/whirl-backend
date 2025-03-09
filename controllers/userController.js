@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const {
   getUserProfileByUserId,
   getUserDetailsByUsername,
+  doesUserIdFollowUserId,
 } = require("../prisma/db.js");
 
 const getUserProfile = (req, res) => {
@@ -16,7 +17,24 @@ const getUserProfile = (req, res) => {
       const username = req.params.username;
       const user = await getUserDetailsByUsername(username);
       const profileData = await getUserProfileByUserId(user.id);
-      res.json(profileData);
+
+      if (authData.user.id != user.id) {
+        // make a query to determine if user follows you
+        const doesUserFollowLoggedUser = await doesUserIdFollowUserId(
+          user.id,
+          authData.user.id,
+        );
+        // Alternatively, do a query to determine if you follow the user
+        const doesLoggedUserFollowUser = await doesUserIdFollowUserId(
+          authData.user.id,
+          user.id,
+        );
+        return res.json({
+          profileData,
+          doesLoggedUserFollowUser,
+          doesUserFollowLoggedUser,
+        });
+      } else res.json({ profileData });
     } catch (err) {
       console.log(err);
     }
