@@ -30,10 +30,12 @@ app.use(cookieParser());
 const authRouter = require("./routers/authRouter.js");
 const userRouter = require("./routers/userRouter.js");
 const postRouter = require("./routers/postRouter.js");
+const friendRouter = require("./routers/friendRouter.js");
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/posts?", postRouter);
+app.use("/api/friends?", friendRouter);
 
 app.listen(PORT, () => {
   console.log(`App listening on: ${PORT}`);

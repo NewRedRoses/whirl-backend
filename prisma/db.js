@@ -294,6 +294,53 @@ const getUserDetailsByUsername = async (username) => {
   }
 };
 
+const getFriendshipRelationship = async (userIdA, userIdB) => {
+  try {
+    const query = await prisma.userFriend.findFirst({
+      where: {
+        AND: [
+          {
+            userIdA: {
+              equals: userIdA,
+            },
+          },
+          {
+            userIdB: {
+              equals: userIdB,
+            },
+          },
+        ],
+      },
+    });
+    return query;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
+const doesUserIdFollowUserId = async (userIdA, userIdB) => {
+  try {
+    const doesAfollowB = await getFriendshipRelationship(userIdA, userIdB);
+
+    return doesAfollowB ? true : false;
+  } catch (err) {
+    console.log("Error running db query: ", err);
+  }
+};
+
+const removeFriendsById = async (userFriendId) => {
+  try {
+    const query = await prisma.userFriend.delete({
+      where: {
+        id: userFriendId,
+      },
+    });
+    return query;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 module.exports = {
   getUserProfileByUserId,
   getPostsDesc,
@@ -307,4 +354,7 @@ module.exports = {
   addCommentToPost,
   addFriendsById,
   getUserDetailsByUsername,
+  doesUserIdFollowUserId,
+  removeFriendsById,
+  getFriendshipRelationship,
 };
