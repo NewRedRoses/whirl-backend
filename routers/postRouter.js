@@ -13,8 +13,8 @@ const {
   handlePostComment,
 } = require("../controllers/postController.js");
 
-postRouter.get("", getHomePagePosts);
-postRouter.post("", handleSubmitPost);
+postRouter.get("/", getHomePagePosts);
+postRouter.post("/", handleSubmitPost);
 
 postRouter.get("/id/:post_id", getPostById);
 
