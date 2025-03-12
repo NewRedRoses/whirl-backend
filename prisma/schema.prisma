@@ -28,6 +28,7 @@ model User {
   friendOf    User[]        @relation("UserFriends") //TB deprecated
   friendsA    UserFriend[]  @relation("FriendshipA")
   friendsB    UserFriend[]  @relation("FriendshipB")
+  role        String        @default("user")
 }
 
 model Profile {
