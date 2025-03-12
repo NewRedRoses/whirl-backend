@@ -19,8 +19,9 @@ const getHomePagePosts = (req, res) => {
       return res.sendStatus(401);
     }
     try {
-      const posts = await getPostsDesc();
-      res.json(posts);
+      const loggedInUserId = authData.user.id;
+      const fetchedPosts = await getPostsDesc(loggedInUserId);
+      res.json(fetchedPosts);
     } catch (err) {
       res.status(400).send("Unable to fetch posts. Please try again later.");
     }

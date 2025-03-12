@@ -34,31 +34,46 @@ const getUserProfileByUserId = async (userId) => {
   }
 };
 
-const getPostsDesc = async () => {
-  const posts = await prisma.post.findMany({
-    orderBy: {
-      datePosted: "desc",
+const getPostsDesc = async (loggedInUserId) => {
+  const postsObject = await prisma.userFriend.findMany({
+    where: {
+      userIdA: loggedInUserId,
     },
     select: {
-      id: true,
-      userId: true,
-      content: true,
-      datePosted: true,
-      likesNum: true,
-      _count: {
+      userB: {
         select: {
-          postComment: true,
-        },
-      },
-      user: {
-        select: {
-          profile: true,
           username: true,
+          post: {
+            orderBy: {
+              datePosted: "desc",
+            },
+            select: {
+              id: true,
+              userId: true,
+              content: true,
+              datePosted: true,
+              likesNum: true,
+              user: {
+                select: {
+                  username: true,
+                  profile: true,
+                },
+              },
+              _count: {
+                select: {
+                  postComment: true,
+                },
+              },
+            },
+          },
         },
       },
     },
   });
-  return posts;
+
+  const flattenPosts = postsObject.flatMap((friend) => friend.userB.post);
+
+  return flattenPosts;
 };
 
 const getAllUsersPosts = async (id) => {
