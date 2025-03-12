@@ -79,6 +79,9 @@ const getPostsDesc = async (loggedInUserId) => {
 const getAllUsersPosts = async (id) => {
   try {
     const posts = await prisma.post.findMany({
+      orderBy: {
+        datePosted: "desc",
+      },
       where: {
         userId: id,
       },
