@@ -1,0 +1,5 @@
+-- AlterTable
+ALTER TABLE "Profile" ALTER COLUMN "displayName" SET DATA TYPE VARCHAR(50);
+
+-- AlterTable
+ALTER TABLE "User" ALTER COLUMN "username" SET DATA TYPE VARCHAR(50);
