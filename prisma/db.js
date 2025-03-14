@@ -35,6 +35,37 @@ const getUserProfileByUserId = async (userId) => {
   }
 };
 
+const getAllPosts = async () => {
+  try {
+    const allPosts = await prisma.post.findMany({
+      orderBy: {
+        datePosted: "desc",
+      },
+      select: {
+        id: true,
+        userId: true,
+        content: true,
+        datePosted: true,
+        likesNum: true,
+        user: {
+          select: {
+            username: true,
+            profile: true,
+          },
+        },
+        _count: {
+          select: {
+            postComment: true,
+          },
+        },
+      },
+    });
+    return allPosts;
+  } catch (error) {
+    console.log(error);
+  }
+};
+
 const getPostsDesc = async (loggedInUserId) => {
   const postsObject = await prisma.userFriend.findMany({
     where: {
@@ -376,4 +407,5 @@ module.exports = {
   doesUserIdFollowUserId,
   removeFriendsById,
   getFriendshipRelationship,
+  getAllPosts,
 };

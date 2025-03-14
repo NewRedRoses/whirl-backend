@@ -11,6 +11,7 @@ const {
   getCommentsFromPostId,
   addCommentToPost,
   getUserDetailsByUsername,
+  getAllPosts,
 } = require("../prisma/db.js");
 
 const getHomePagePosts = (req, res) => {
@@ -19,9 +20,14 @@ const getHomePagePosts = (req, res) => {
       return res.sendStatus(401);
     }
     try {
-      const loggedInUserId = authData.user.id;
-      const fetchedPosts = await getPostsDesc(loggedInUserId);
-      res.json(fetchedPosts);
+      if (authData.user.role == "guest") {
+        const fetchAllPosts = await getAllPosts();
+        res.json(fetchAllPosts);
+      } else {
+        const loggedInUserId = authData.user.id;
+        const fetchedPosts = await getPostsDesc(loggedInUserId);
+        res.json(fetchedPosts);
+      }
     } catch (err) {
       res.status(400).send("Unable to fetch posts. Please try again later.");
     }
