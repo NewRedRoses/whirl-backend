@@ -3,9 +3,13 @@ const { generateUsername } = require("unique-username-generator");
 
 const passport = require("passport");
 const GoogleStrategy = require("passport-google-oauth20").Strategy;
+const LocalStrategy = require("passport-local").Strategy;
 
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+
+const { faker } = require("@faker-js/faker");
+const rateLimit = require("express-rate-limit");
 
 passport.use(
   new GoogleStrategy(
@@ -52,6 +56,25 @@ passport.use(
     },
   ),
 );
+
+passport.use(
+  new LocalStrategy(async (username, password, done) => {
+    try {
+      if (username == "guest" && password == "guest") {
+        const user = await prisma.user.findFirst({
+          where: {
+            role: "guest",
+          },
+        });
+        return done(null, user);
+      }
+      return done(null, false, { message: "Incorrect info for guest!" });
+    } catch (err) {
+      return done(err);
+    }
+  }),
+);
+
 passport.serializeUser((user, done) => {
   done(null, user.id);
 });
@@ -64,11 +87,7 @@ passport.deserializeUser(async (id, done) => {
         id,
       },
       select: {
-        profile: {
-          select: {
-            username: true,
-          },
-        },
+        username: true,
       },
     });
     done(null, user);
@@ -143,4 +162,42 @@ const checkSession = (req, res) => {
   }
 };
 
-module.exports = { googleCallback, googLogOut, checkSession };
+const guestLoginCallback = (req, res, next) => {
+  passport.authenticate("local", (err, user, info, status) => {
+    if (err) {
+      return next(err);
+    }
+    if (!user) {
+      return res.status(404).json({ error: "Guest login failed." });
+    }
+
+    jwt.sign(
+      { user },
+      process.env.SECRET,
+      { expiresIn: "15m" },
+      (err, token) => {
+        if (err) {
+          return res.redirect(
+            `${process.env.FRONTEND_URL}/login?error=server_error`,
+          );
+        }
+        res.cookie("jwt", token, {
+          httpOnly: true,
+          secure: process.env.NODE_ENV == "dev" ? false : true,
+          sameSite: "strict",
+          maxAge: 15 * 60 * 1000, // 15 minutes
+        });
+
+        // redirect
+        res.redirect(`${process.env.FRONTEND_URL}/`);
+      },
+    );
+  })(req, res, next);
+};
+
+module.exports = {
+  googleCallback,
+  googLogOut,
+  checkSession,
+  guestLoginCallback,
+};
