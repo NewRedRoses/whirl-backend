@@ -159,7 +159,7 @@ const getPostDetailsById = async (postId) => {
   try {
     const post = await prisma.post.findUnique({
       where: {
-        id: parseInt(postId),
+        id: postId,
       },
       select: {
         id: true,

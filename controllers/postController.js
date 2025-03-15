@@ -75,6 +75,9 @@ const getPostById = (req, res) => {
       return res.sendStatus(401);
     }
     const postId = parseInt(req.params.post_id);
+    if (isNaN(postId)) {
+      return res.status(400).send("Invalid post id");
+    }
 
     const postDetails = await getPostDetailsById(postId);
 
@@ -92,6 +95,9 @@ const handlePostLike = (req, res) => {
       return res.sendStatus(401);
     }
     const postId = parseInt(req.params.post_id);
+    if (isNaN(postId)) {
+      return res.status(400).send("Invalid post id");
+    }
     const userId = authData.user.id;
 
     const isPostLiked = await getPostLikeId(postId, userId);
@@ -126,6 +132,9 @@ const hasUserLikedPost = (req, res) => {
     }
     try {
       const postId = parseInt(req.params.post_id);
+      if (isNaN(postId)) {
+        return res.status(400).send("Invalid post id");
+      }
       const userId = authData.user.id;
 
       const isPostLiked = await getPostLikeId(postId, userId);
