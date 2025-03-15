@@ -19,8 +19,8 @@ const getUserProfileByUserId = async (userId) => {
             role: true,
             _count: {
               select: {
-                friendOf: true,
-                friends: true,
+                friendsA: true,
+                friendsB: true,
               },
             },
           },
