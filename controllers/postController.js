@@ -57,7 +57,11 @@ const handleSubmitPost = (req, res) => {
       return res.sendStatus(401);
     }
     try {
-      if (req.body.content != "" && req.body.content != undefined) {
+      if (
+        req.body.content != "" &&
+        req.body.content != undefined &&
+        req.body.content != " "
+      ) {
         await createPost(authData.user.id, req.body.content);
         res.sendStatus(200);
       } else {
