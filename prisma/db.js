@@ -144,12 +144,13 @@ const getAllUsersPosts = async (id) => {
 
 const createPost = async (userId, content) => {
   try {
-    await prisma.post.create({
+    const createdPost = await prisma.post.create({
       data: {
         userId: userId,
         content: content,
       },
     });
+    return createdPost;
   } catch (error) {
     console.log(error);
   }
