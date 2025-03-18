@@ -8,15 +8,12 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-// const corsOptions = {
-//   origin: "https://whirl.social",
-//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-//   credentials: true,
-//   allowedHeaders: "Content-Type,Authorization",
-// };
-//
-// app.use(cors(corsOptions));
-app.options("*", cors()); // include before other routes
+const corsOptions = {
+  origin: "https://www.whirl.social",
+  credentials: true,
+};
+
+app.use(cookieParser());
 
 app.use(
   session({
@@ -25,9 +22,13 @@ app.use(
     saveUninitialized: false,
   }),
 );
+
 app.use(passport.session());
+app.use(cors(corsOptions));
+app.options("*", cors(corsOptions)); // Allow preflight requests
+
+app.use(express.json()); // Parse JSON requests
 app.use(express.urlencoded({ extended: false }));
-app.use(cookieParser());
 
 // Routers
 const authRouter = require("./routers/authRouter.js");
