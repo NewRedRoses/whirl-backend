@@ -8,15 +8,15 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-const corsOptions = {
-  origin: "https://whirl.social",
-  methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
-  credentials: true,
-  allowedHeaders: "Content-Type,Authorization",
-};
-
-app.use(cors(corsOptions));
-app.options("*", cors()); // Allow preflight requests
+// const corsOptions = {
+//   origin: "https://whirl.social",
+//   methods: "GET,HEAD,PUT,PATCH,POST,DELETE",
+//   credentials: true,
+//   allowedHeaders: "Content-Type,Authorization",
+// };
+//
+// app.use(cors(corsOptions));
+app.options("*", cors()); // include before other routes
 
 app.use(
   session({
