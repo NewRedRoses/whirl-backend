@@ -8,12 +8,12 @@ const app = express();
 
 const PORT = process.env.PORT || 3000;
 
-app.use(
-  cors({
-    origin: process.env.FRONTEND_URL,
-    credentials: true,
-  }),
-);
+const corsOptions = {
+  origin: "https://whirl.social",
+  credentials: true,
+};
+
+app.use(cors(corsOptions));
 
 app.use(
   session({
