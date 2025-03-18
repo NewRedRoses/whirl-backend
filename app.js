@@ -40,6 +40,10 @@ app.use("/api/user", userRouter);
 app.use("/api/posts?", postRouter);
 app.use("/api/friends?", friendRouter);
 
+app.get("/api/test", (req, res) => {
+  res.status(200).json({ success: "Backend is working." });
+});
+
 app.listen(PORT, () => {
   console.log(`App listening on: ${PORT}`);
 });
