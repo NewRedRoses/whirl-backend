@@ -41,6 +41,7 @@ async function createGuestUser() {
     console.log("Error creating guest user: ", err);
   }
 }
+
 async function seed() {
   try {
     createGuestUser();
@@ -53,7 +54,15 @@ async function seed() {
           username: generateUsername(),
         },
       });
-      // // Create matching profile for the user
+
+      await prisma.post.create({
+        data: {
+          userId: newUser.id,
+          content: faker.lorem.sentence(getRandomInt(30)),
+        },
+      });
+
+      // Create matching profile for the user
       const newProfile = await prisma.profile.create({
         data: {
           userId: newUser.id,
@@ -68,4 +77,9 @@ async function seed() {
     console.log(`Error creating users: ${error}`);
   }
 }
+
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
+
 seed();
