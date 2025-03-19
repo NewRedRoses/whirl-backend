@@ -338,7 +338,7 @@ const getUserDetailsByUsername = async (username) => {
     if (user) {
       return user;
     } else {
-      return "user not found";
+      return false;
     }
   } catch (err) {
     console.log(err);
