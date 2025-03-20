@@ -21,7 +21,7 @@ const getHomePagePosts = (req, res) => {
     }
     try {
       if (authData.user.role == "guest") {
-        const fetchAllPosts = await getAllPosts();
+        const fetchAllPosts = await getAllPosts(authData.user.id);
         res.json(fetchAllPosts);
       } else {
         const loggedInUserId = authData.user.id;
@@ -83,11 +83,13 @@ const getPostById = (req, res) => {
       return res.sendStatus(401);
     }
     const postId = parseInt(req.params.post_id);
+    const userId = authData.user.id;
+
     if (isNaN(postId)) {
       return res.status(400).send("Invalid post id");
     }
 
-    const postDetails = await getPostDetailsById(postId);
+    const postDetails = await getPostDetailsById(postId, userId);
 
     if (postDetails) {
       res.json(postDetails);

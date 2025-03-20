@@ -35,39 +35,54 @@ const getUserProfileByUserId = async (userId) => {
   }
 };
 
-const getAllPosts = async () => {
+const getAllPosts = async (loggedInUserId) => {
   try {
-    const allPosts = await prisma.post.findMany({
+    let allPosts = await prisma.post.findMany({
       orderBy: {
         datePosted: "desc",
       },
       select: {
         id: true,
-        userId: true,
         content: true,
         datePosted: true,
-        likesNum: true,
         user: {
           select: {
             username: true,
-            profile: true,
+            profile: {
+              select: {
+                displayName: true,
+                pfpUrl: true,
+              },
+            },
           },
         },
         _count: {
           select: {
             postComment: true,
+            postLike: true,
+          },
+        },
+        postLike: {
+          where: {
+            userId: loggedInUserId,
+          },
+          select: {
+            id: true,
           },
         },
       },
     });
-    return allPosts;
+    return allPosts.map((post) => ({
+      ...post,
+      hasLiked: post.postLike.length > 0,
+    }));
   } catch (error) {
     console.log(error);
   }
 };
 
 const getPostsDesc = async (loggedInUserId) => {
-  const postsObject = await prisma.userFriend.findMany({
+  let postsObject = await prisma.userFriend.findMany({
     where: {
       userIdA: loggedInUserId,
     },
@@ -81,19 +96,31 @@ const getPostsDesc = async (loggedInUserId) => {
             },
             select: {
               id: true,
-              userId: true,
               content: true,
               datePosted: true,
-              likesNum: true,
               user: {
                 select: {
                   username: true,
-                  profile: true,
+                  profile: {
+                    select: {
+                      displayName: true,
+                      pfpUrl: true,
+                    },
+                  },
                 },
               },
               _count: {
                 select: {
                   postComment: true,
+                  postLike: true,
+                },
+              },
+              postLike: {
+                where: {
+                  userId: loggedInUserId,
+                },
+                select: {
+                  id: true,
                 },
               },
             },
@@ -105,7 +132,10 @@ const getPostsDesc = async (loggedInUserId) => {
 
   const flattenPosts = postsObject.flatMap((friend) => friend.userB.post);
 
-  return flattenPosts;
+  return flattenPosts.map((post) => ({
+    ...post,
+    hasLiked: post.postLike.length > 0,
+  }));
 };
 
 const getAllUsersPosts = async (id) => {
@@ -119,24 +149,39 @@ const getAllUsersPosts = async (id) => {
       },
       select: {
         id: true,
-        userId: true,
         content: true,
         datePosted: true,
-        likesNum: true,
         _count: {
           select: {
             postComment: true,
+            postLike: true,
           },
         },
         user: {
           select: {
-            profile: true,
+            profile: {
+              select: {
+                displayName: true,
+                pfpUrl: true,
+              },
+            },
             username: true,
+          },
+        },
+        postLike: {
+          where: {
+            userId: id,
+          },
+          select: {
+            id: true,
           },
         },
       },
     });
-    return posts;
+    return posts.map((post) => ({
+      ...post,
+      hasLiked: post.postLike.length > 0,
+    }));
   } catch (err) {
     console.log(err);
   }
@@ -156,9 +201,9 @@ const createPost = async (userId, content) => {
   }
 };
 
-const getPostDetailsById = async (postId) => {
+const getPostDetailsById = async (postId, loggedInUserId) => {
   try {
-    const post = await prisma.post.findUnique({
+    let post = await prisma.post.findUnique({
       where: {
         id: postId,
       },
@@ -172,6 +217,14 @@ const getPostDetailsById = async (postId) => {
           select: {
             postComment: true,
             postLike: true,
+          },
+        },
+        postLike: {
+          where: {
+            userId: loggedInUserId,
+          },
+          select: {
+            id: true,
           },
         },
         user: {
@@ -188,6 +241,8 @@ const getPostDetailsById = async (postId) => {
       },
     });
     if (post) {
+      post.hasLiked = post.postLike.length > 0;
+
       return post;
     } else {
       return undefined;
