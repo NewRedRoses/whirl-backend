@@ -415,6 +415,11 @@ const getFriendshipRelationship = async (userIdA, userIdB) => {
               equals: userIdB,
             },
           },
+          {
+            isActive: {
+              equals: true,
+            },
+          },
         ],
       },
     });
@@ -434,14 +439,20 @@ const doesUserIdFollowUserId = async (userIdA, userIdB) => {
   }
 };
 
+// TODO: Change follow/unfollow logic by simply updating the row from being active/inactive
+// as opposed to deleting then re-inserting one
+
 const removeFriendsById = async (userFriendId) => {
   try {
-    const query = await prisma.userFriend.delete({
+    const query2 = await prisma.userFriend.update({
       where: {
         id: userFriendId,
       },
+      data: {
+        isActive: false,
+      },
     });
-    return query;
+    return query2;
   } catch (error) {
     console.log(error);
   }
