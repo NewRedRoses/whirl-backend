@@ -30,11 +30,11 @@ const handleAddFriend = (req, res) => {
         // Unfollow user
         const friendship = await getFriendshipRelationship(userIdA, userB.id);
         const removeFriendQuery = await removeFriendsById(friendship.id);
-        res.end();
+        res.status(200).json({ unfollowed: "User unfollowed successfully" });
       } else {
         // Follow user
         const addFriendQuery = await addFriendsById(userIdA, userB.id);
-        res.end();
+        res.status(200).json({ followed: "User followed successfully" });
       }
     } catch (err) {
       console.log(err);
