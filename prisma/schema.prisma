@@ -79,6 +79,7 @@ model UserFriend {
   userB         User     @relation("FriendshipB", fields: [userIdB], references: [id])
   requestStatus String   @default("pending")
   date          DateTime @default(now())
+  isActive      Boolean  @default(true)
 
   @@unique([userIdA, userIdB])
 }
